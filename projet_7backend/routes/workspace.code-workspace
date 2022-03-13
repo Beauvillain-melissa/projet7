@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\go-fullstack"
+		},
+		{
+			"path": "..\\..\\Web-Developer-P6-master"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Web-Developer-P6-master"
+	}
+}
