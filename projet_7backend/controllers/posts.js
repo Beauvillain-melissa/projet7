@@ -28,10 +28,10 @@ exports.createPost = (req, res, next) => {
   });
   db.connect(function (err) {
     if (err) throw err;
-
-    var sql = 'INSERT INTO posts (title, message, author) VALUES (?, ?, ?)';
-    var post = [req.body.post.title, req.body.post.message, req.body.userId];
-
+    var imgPath = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    var sql = 'INSERT INTO posts (title, message, author, image) VALUES (?, ?, ?, ?)';
+    var post = [req.body.postTitle, req.body.postMessage, req.body.userId, imgPath];
+    
     db.query(sql, post, function (err, results) {
       if (err) throw err;
       res.status(201).json({ message: 'Post créé !' })
@@ -49,7 +49,6 @@ exports.createResponse = (req, res, next) => {
   });
   db.connect(function (err) {
     if (err) throw err;
-
     var sql = 'INSERT INTO reponses (message, post_id, author) VALUES (?, ?, ?)';
     var post = [req.body.response, req.body.postId, req.body.userId];
 

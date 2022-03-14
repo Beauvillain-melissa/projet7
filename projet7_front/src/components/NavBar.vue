@@ -2,10 +2,12 @@
   <div id="nav">
     <nav
       class="navbar navbar-expand-lg navbar-light"
-      style="background-color: #e3f2fd"
+      style="background-color: #fcd7d7"
     >
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Réseau social</a>
+        <a class="navbar-brand" href="#">
+          <img src="../../public/image/icon-left-font-monochrome-black.png" alt="Kitten" class="img-nav">
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -61,5 +63,8 @@ export default {
 <style>
 li > a {
   cursor: pointer;
+}
+.img-nav {
+  height: 50px;
 }
 </style>

@@ -27,11 +27,12 @@ const actions = {
     },
     async CreatePost({ dispatch, getters }, post) {
         let user = getters.StateUser;
-        let postData = {
-            post : post,
-            userId : user.id
-        }
-        await axios.post('post', postData)
+        post.append('userId', user.id);
+        await axios.post('post', post, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+          })
         await dispatch('GetPosts')
     },
     async CreateResponse({ dispatch, getters }, response) {

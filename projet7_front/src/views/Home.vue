@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <p>Bienvenue sur nore réseau social. N'hesitez pas à consulter nos posts !</p>
-    <img src="../../public/image/accueil.png" class="img_accueil" /> 
+    <img src="../../public/image/icon-above-font.png" class="img_accueil" /> 
   </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
 </script>
 <style scoped>
 .img_accueil {
-  width: 100%;
-  /* height: 600px; */
+  display: block;
+ margin: 0px auto;
+  height: 600px;
 }
 </style>

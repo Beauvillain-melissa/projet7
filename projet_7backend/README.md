@@ -1,1 +1,3 @@
-projet_6_backend
+projet_7_backend
+
+nodemon server
