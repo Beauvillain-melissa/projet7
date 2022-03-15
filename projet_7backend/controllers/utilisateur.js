@@ -16,8 +16,8 @@ exports.signup = (req, res, next) => {
       db.connect(function (err) {
         if (err) throw err;
 
-        var sql = 'INSERT INTO utilisateur (nom, prenom, email, date_de_naissance, mot_de_passe) VALUES (?, ?, ?, ?, ?)';
-        var post = [req.body.name, req.body.prenom, req.body.email, req.body.date, hash];
+        var sql = 'INSERT INTO utilisateur (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)';
+        var post = [req.body.name, req.body.prenom, req.body.email, hash];
 
         db.query(sql, post, function (err, results) {
           if (err) throw err;

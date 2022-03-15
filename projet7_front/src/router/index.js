@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Inscription from '../views/Inscription.vue'
 import Connection from '../views/Connection.vue'
 import Posts from "../views/Posts";
+import Post from "../views/Post";
 import store from "../store";
 
 Vue.use(VueRouter)
@@ -31,6 +32,12 @@ const routes = [
     path: "/posts",
     name: "Posts",
     component: Posts,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/post/:id",
+    name: "Post",
+    component: Post,
     meta: { requiresAuth: true },
   },
 ]

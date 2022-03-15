@@ -9,7 +9,7 @@ exports.getPosts = (req, res, next) => {
     password: "metedor50"
   });
 
-  var sql = 'SELECT posts.*, u.nom as author_name, u.prenom as author_prenom FROM projet7.posts join utilisateur u on u.id = posts.author order by posts.created_at desc;';
+  var sql = 'SELECT posts.*, u.nom as author_name, u.prenom as author_prenom , count(r.id) as nb_responses FROM projet7.posts join utilisateur u on u.id = posts.author left join reponses r on r.post_id = posts.id group by r.post_id order by posts.created_at desc;';
   var post = [];
   db.query(sql, post, function (err, results) {
     res.status(200).json({

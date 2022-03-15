@@ -1,9 +1,65 @@
 <template>
   <div class="container">
-    <div v-if="User">
-      <p>Bonjour {{ User.prenom }} !</p>
+    <div class="hello-user" v-if="User">
+      <h3>Bonjour {{ User.prenom }} !</h3>
     </div>
-    <div>
+    
+    <div class="posts" v-if="Posts">
+      <b-table id="my-table" striped hover :items="Posts" :fields="fields" :per-page="perPage" :current-page="currentPage">
+        <template #cell(title)="row">
+          <router-link :to="`/post/${row.item.id}`">{{ row.item.title  }}</router-link>
+        </template>
+        <template #cell(author)="datarow">
+          {{ datarow.item.author_prenom }} {{ datarow.item.author_name }} 
+        </template>
+      </b-table>
+      <b-pagination
+      v-model="currentPage"
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="my-table"
+    ></b-pagination>
+    </div>
+      <!-- <ul>
+        <li v-for="post in Posts" :key="post.id">
+          <div id="post-div">
+            <p>{{ post.title }}</p>
+            <p>{{ post.message }}</p>
+            <div v-if="post.image">
+              <img :src="post.image" class="img-post" >
+            </div>
+            <p>Ecrit par : {{ post.author_prenom + " " + post.author_name }}</p>
+            <span v-for="response in Responses" :key="response.id">
+              <div v-if="response.post_id === post.id" class="responses">
+                {{ response.message }}
+              </div>
+            </span>
+            <div id="post-div">
+              <div>Répondre :</div>
+              <form @submit.prevent="submitResponse(post)">
+                <b-row>
+                  <b-col lg="8" class="pb-2">
+                    <textarea
+                      name="message"
+                      v-model="post.newMessage"
+                      class="textarea-reponse"
+                      placeholder="..."
+                    ></textarea>
+                  </b-col>
+                  <b-col lg="4" class="pb-2"
+                    ><b-button size="sm" type="submit" variant="primary" pill
+                      >Envoyer</b-button
+                    ></b-col
+                  >
+                </b-row>
+              </form>
+            </div>
+          </div>
+        </li>
+      </ul> -->
+      
+    <div v-else>Aucun post trouvé !</div>
+    <div class="form-post">
       <b-form @submit.prevent="submit">
         <b-form-group
           id="input-group-1"
@@ -54,51 +110,13 @@
         </b-row>
       </b-form>
     </div>
-    <div class="posts" v-if="Posts">
-      <ul>
-        <li v-for="post in Posts" :key="post.id">
-          <div id="post-div">
-            <p>{{ post.title }}</p>
-            <p>{{ post.message }}</p>
-            <div v-if="post.image">
-              <img :src="post.image" class="img-post" >
-            </div>
-            <p>Ecrit par : {{ post.author_prenom + " " + post.author_name }}</p>
-            <span v-for="response in Responses" :key="response.id">
-              <div v-if="response.post_id === post.id" class="responses">
-                {{ response.message }}
-              </div>
-            </span>
-            <div id="post-div">
-              <div>Répondre :</div>
-              <form @submit.prevent="submitResponse(post)">
-                <b-row>
-                  <b-col lg="8" class="pb-2">
-                    <textarea
-                      name="message"
-                      v-model="post.newMessage"
-                      class="textarea-reponse"
-                      placeholder="..."
-                    ></textarea>
-                  </b-col>
-                  <b-col lg="4" class="pb-2"
-                    ><b-button size="sm" type="submit" variant="primary" pill
-                      >Envoyer</b-button
-                    ></b-col
-                  >
-                </b-row>
-              </form>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div v-else>Aucun post trouvé !</div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import moment from 'moment';
+
 export default {
   name: "Posts",
   components: {},
@@ -108,7 +126,34 @@ export default {
         title: "",
         message: "",
       },
-      images: null
+      images: null,
+      fields: [
+          {
+            key: 'title',
+            label: 'Sujet',
+            sortable: true
+          },
+          {
+            key: 'author',
+            label: 'Auteur',
+            sortable: true
+          },
+          {
+            key: 'nb_responses',
+            label: 'Nb',
+            sortable: true
+          },
+          {
+            key: 'created_at',
+            label: 'Date de création',
+            sortable: true,
+            formatter: (value) => {
+              return moment(value).format('DD/MM/YYYY')
+            }
+          }
+        ],
+        perPage: 10,
+        currentPage: 1,
     };
   },
   created: function () {
@@ -122,6 +167,9 @@ export default {
       User: "StateUser",
       Responses: "StateResponses",
     }),
+    rows() {
+      return this.Posts.length
+    }
   },
   methods: {
     ...mapActions(["CreatePost", "CreateResponse", "GetPosts", "GetResponses"]),
@@ -189,5 +237,15 @@ ul {
 .responses {
     border: 3px solid rgb(252, 215, 215);
 
+}
+.posts {
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+.form-post {
+  margin-bottom: 20px;
+}
+.hello-user {
+  margin-top: 10px;
 }
 </style>

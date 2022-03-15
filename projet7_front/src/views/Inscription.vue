@@ -68,19 +68,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group
-          id="input-group-6"
-          label="Date de naissance:"
-          label-for="input-6"
-        >
-          <b-form-datepicker
-            id="input-6"
-            v-model="form.date"
-            class="mb-2"
-            placeholder="Entrer votre date de naissance"
-          >
-          </b-form-datepicker>
-        </b-form-group>
+       
 
         <b-button type="submit" variant="primary">Inscription</b-button>
       </b-form>
