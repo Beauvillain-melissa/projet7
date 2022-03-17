@@ -18,6 +18,23 @@ exports.getPosts = (req, res, next) => {
   })
 };
 
+exports.getPost = (req, res, next) => {
+  const db = mysql.createConnection({
+    database: 'projet7',
+    host: "localhost",
+    user: "root",
+    password: "metedor50"
+  });
+
+  var sql = 'SELECT posts.*, u.nom as author_name, u.prenom as author_prenom FROM projet7.posts join utilisateur u on u.id = posts.author WHERE posts.id = ? order by posts.created_at desc;';
+  var post = [req.params.id];
+  db.query(sql, post, function (err, results) {
+    res.status(200).json({
+      post: results
+    });
+  })
+};
+
 exports.createPost = (req, res, next) => {
   
   const db = mysql.createConnection({
@@ -66,9 +83,9 @@ exports.getResponses = (req, res, next) => {
     user: "root",
     password: "metedor50"
   });
-
-  var sql = 'SELECT r.*, u.nom as author_name, u.prenom as author_prenom FROM reponses r join utilisateur u on u.id = R.author order by R.created_at asc;';
-  var post = [];
+  var post = [req.params.id];
+  var sql = 'SELECT r.*, u.nom as author_name, u.prenom as author_prenom FROM reponses r join utilisateur u on u.id = R.author where r.post_id = ? order by R.created_at asc;';
+  
   db.query(sql, post, function (err, results) {
     res.status(200).json({
       responses: results

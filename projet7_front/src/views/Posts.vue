@@ -20,43 +20,6 @@
       aria-controls="my-table"
     ></b-pagination>
     </div>
-      <!-- <ul>
-        <li v-for="post in Posts" :key="post.id">
-          <div id="post-div">
-            <p>{{ post.title }}</p>
-            <p>{{ post.message }}</p>
-            <div v-if="post.image">
-              <img :src="post.image" class="img-post" >
-            </div>
-            <p>Ecrit par : {{ post.author_prenom + " " + post.author_name }}</p>
-            <span v-for="response in Responses" :key="response.id">
-              <div v-if="response.post_id === post.id" class="responses">
-                {{ response.message }}
-              </div>
-            </span>
-            <div id="post-div">
-              <div>Répondre :</div>
-              <form @submit.prevent="submitResponse(post)">
-                <b-row>
-                  <b-col lg="8" class="pb-2">
-                    <textarea
-                      name="message"
-                      v-model="post.newMessage"
-                      class="textarea-reponse"
-                      placeholder="..."
-                    ></textarea>
-                  </b-col>
-                  <b-col lg="4" class="pb-2"
-                    ><b-button size="sm" type="submit" variant="primary" pill
-                      >Envoyer</b-button
-                    ></b-col
-                  >
-                </b-row>
-              </form>
-            </div>
-          </div>
-        </li>
-      </ul> -->
       
     <div v-else>Aucun post trouvé !</div>
     <div class="form-post">

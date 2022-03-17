@@ -1,91 +1,103 @@
 <template>
   <div class="container">
-    
+    <h2 class="h2-sujet">Sujet : {{ Post[0].title }}</h2>
+    <b-card
+      class="cardP"
+      v-bind:title="Post[0].author_prenom + ' ' + Post[0].author_name"
+      v-bind:sub-title="Post[0].created_at | formatDate"
+    >
+      <b-card-text>
+        <hr class="my-4" />
+        {{ Post[0].message }}
+      </b-card-text>
+      <a v-if="Post[0].image" target="_blank" :href="Post[0].image">
+        <img :src="Post[0].image" class="img-post" />
+      </a>
+    </b-card>
+    <b-card
+      v-for="response in Responses"
+      :key="response.id"
+      class="cardP"
+      v-bind:title="response.author_prenom + ' ' + response.author_name"
+      v-bind:sub-title="response.created_at | formatDate"
+    >
+      <b-card-text>
+        <hr class="my-4" />
+        {{ response.message }}
+      </b-card-text>
+    </b-card>
+    <form class="form-reponse" @submit.prevent="submitResponse()">
+      <b-form-group
+        id="input-group-2"
+        label="Réponse :"
+        label-for="message"
+        label-cols="2"
+      >
+        <b-form-textarea
+          id="message"
+          v-model="newMessage"
+          placeholder="..."
+          rows="3"
+          max-rows="6"
+          required
+        ></b-form-textarea>
+      </b-form-group>
+      <b-row>
+        <b-col cols="2"></b-col>
+        <b-col>
+          <div>
+          <b-button class="poster" type="submit" variant="primary"
+            >Poster</b-button
+          >
+          <router-link :to="`/posts`">
+            <b-button class="poster" variant="outline-danger">
+              Liste des sujets
+            </b-button>
+            </router-link
+          >
+          </div>
+        </b-col>
+      </b-row>
+    </form>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import moment from 'moment';
 
 export default {
   name: "Post",
   components: {},
   data() {
     return {
-      form: {
-        title: "",
-        message: "",
-      },
-      images: null,
-      fields: [
-          {
-            key: 'title',
-            label: 'Sujet',
-            sortable: true
-          },
-          {
-            key: 'author_name',
-            label: 'Nom de l\'auteur',
-            sortable: true
-          },
-          {
-            key: 'author_prenom',
-            label: 'Prénom de l\'auteur',
-            sortable: true
-          },
-          {
-            key: 'nb_responses',
-            label: 'Nb',
-            sortable: true
-          },
-          {
-            key: 'created_at',
-            label: 'Date de création',
-            sortable: true,
-            formatter: (value) => {
-              return moment(value).format('DD/MM/YYYY')
-            }
-          }
-        ],
+      postId: this.$route.params.id,
+      newMessage: "",
     };
   },
   created: function () {
     // a function to call getposts action
-    this.GetPosts();
-    this.GetResponses();
+    this.GetPost(this.$route.params.id);
   },
   computed: {
     ...mapGetters({
-      Posts: "StatePosts",
+      Post: "StateCurrentPost",
       User: "StateUser",
       Responses: "StateResponses",
     }),
   },
   methods: {
-    ...mapActions(["CreatePost", "CreateResponse", "GetPosts", "GetResponses"]),
-    async submit() {
-      // try {
-        const formData = new FormData();
-        formData.append('image', this.images);
-        formData.append('postTitle', this.form.title);
-        formData.append('postMessage', this.form.message);
-
-        await this.CreatePost(formData);
-      // } catch (error) {
-      //   throw error;
-      // }
-    },
-    async submitResponse(post) {
+    ...mapActions(["GetPost", "GetResponses", "CreateResponse"]),
+    async submitResponse() {
       try {
-        await this.CreateResponse(post);
+        let data = {
+          postId: this.postId,
+          message: this.newMessage,
+        };
+        await this.CreateResponse(data);
       } catch (error) {
         throw "Sorry you can't make a post now!";
       }
     },
-    uploadFile(event) {
-        this.images = event.target.files[0];
-      },
   },
 };
 </script>
@@ -93,17 +105,6 @@ export default {
 * {
   box-sizing: border-box;
 }
-/* button[type="submit"] {
-  background-color: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  cursor: pointer;
-  border-radius: 30px;
-  margin: 10px;
-}
-button[type="submit"]:hover {
-  background-color: #45a049;
-} */
 .textarea-reponse {
   width: 100%;
   resize: vertical;
@@ -126,8 +127,7 @@ ul {
   height: 100px;
 }
 .responses {
-    border: 3px solid rgb(252, 215, 215);
-
+  border: 3px solid rgb(252, 215, 215);
 }
 .posts {
   margin-top: 20px;
@@ -138,5 +138,21 @@ ul {
 }
 .hello-user {
   margin-top: 10px;
+}
+.h2-sujet {
+  margin-top: 10px;
+}
+.cardP {
+  margin-top: 30px;
+}
+.cardP:nth-child(2n) {
+  background-color: #eef1f6;
+}
+.form-reponse {
+  margin-top: 30px;
+}
+.poster {
+  margin-bottom: 30px;
+  margin-right: 20px;
 }
 </style>

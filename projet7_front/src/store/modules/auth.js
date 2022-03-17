@@ -5,11 +5,13 @@ const state = {
     user: null,
     posts: null,
     responses: null,
+    currentPost: null
 };
 const getters = {
     isAuthenticated: state => !!state.user,    
     StatePosts: state => state.posts,
     StateUser: state => state.user,
+    StateCurrentPost: state => state.currentPost,
     StateResponses: state => state.responses,
 };
 const actions = {
@@ -38,20 +40,24 @@ const actions = {
     async CreateResponse({ dispatch, getters }, response) {
         let user = getters.StateUser;
         let postData = {
-            response : response.newMessage,
-            postId : response.id,
+            response : response.message,
+            postId : response.postId,
             userId : user.id
         }
-        console.log(postData);
         await axios.post('response', postData)
-        await dispatch('GetResponses')
+        await dispatch('GetResponse', response.postId)
     },
     async GetPosts({ commit }) {
         let response = await axios.get('posts')
         commit('setPosts', response.data.posts)
     },
-    async GetResponses({ commit }) {
-        let responses = await axios.get('responses')
+    async GetPost({ dispatch, commit }, PostId) {
+        let post = await axios.get('post/' + PostId)
+        commit('setCurrentPost', post.data.post)
+        await dispatch('GetResponse', PostId)
+    },
+    async GetResponse({ commit }, PostId) {
+        let responses = await axios.get('response/' + PostId )
         commit('setResponses', responses.data.responses)
     },
     async LogOut({ commit }) {
@@ -68,6 +74,9 @@ const mutations = {
     },
     setResponses(state, responses) {
         state.responses = responses;
+    },
+    setCurrentPost(state, currentPost) {
+        state.currentPost = currentPost;
     },
     LogOut(state) {
         state.user = null
