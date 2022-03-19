@@ -54,22 +54,6 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group
-          id="input-group-5"
-          label="Confirmation mot de passe:"
-          label-for="input-5"
-        >
-          <b-form-input
-            id="input-5"
-            v-model="form.confirmationmdp"
-            type="password"
-            placeholder="Confirmer mot de passe"
-            required
-          ></b-form-input>
-        </b-form-group>
-
-       
-
         <b-button type="submit" variant="primary">Inscription</b-button>
       </b-form>
     </div>
@@ -91,7 +75,7 @@ export default {
         email: "",
         mdp: "",
         confirmationmdp: "",
-        date: "",
+       
       },
       showError: false
     };

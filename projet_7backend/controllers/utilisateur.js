@@ -1,25 +1,20 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
-
+var config = require('../config/config.js');
 
 exports.signup = (req, res, next) => {
-  
-  const db = mysql.createConnection({
-    database: 'projet7',
-    host: "localhost",
-    user: "root",
-    password: "metedor50"
-  });
+  var connection = mysql.createConnection(config.databaseOptions);
+
   bcrypt.hash(req.body.mdp, 10)
     .then(hash => {
-      db.connect(function (err) {
+      connection.connect(function (err) {
         if (err) throw err;
 
         var sql = 'INSERT INTO utilisateur (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)';
         var post = [req.body.name, req.body.prenom, req.body.email, hash];
 
-        db.query(sql, post, function (err, results) {
+        connection.query(sql, post, function (err, results) {
           if (err) throw err;
           res.status(201).json({ message: 'Utilisateur créé !' })
         });
@@ -29,15 +24,11 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  const db = mysql.createConnection({
-    database: 'projet7',
-    host: "localhost",
-    user: "root",
-    password: "metedor50"
-  });
+  var connection = mysql.createConnection(config.databaseOptions);
+
   var sql = 'SELECT id, nom, prenom, email, date_de_naissance, mot_de_passe FROM utilisateur WHERE email=?;';
   var post = [req.body.email];
-  db.query(sql, post, function (err, results) {
+  connection.query(sql, post, function (err, results) {
     if (!results || results.length == 0) {
       return res.status(401).json({ error: 'Utilisateur non trouvé !' });
     }

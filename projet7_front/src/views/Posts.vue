@@ -1,26 +1,36 @@
 <template>
-  <div class="container">
+  <div>
     <div class="hello-user" v-if="User">
       <h3>Bonjour {{ User.prenom }} !</h3>
     </div>
-    
+
     <div class="posts" v-if="Posts">
-      <b-table id="my-table" striped hover :items="Posts" :fields="fields" :per-page="perPage" :current-page="currentPage">
+      <b-table
+        id="my-table"
+        striped
+        hover
+        :items="Posts"
+        :fields="fields"
+        :per-page="perPage"
+        :current-page="currentPage"
+      >
         <template #cell(title)="row">
-          <router-link :to="`/post/${row.item.id}`">{{ row.item.title  }}</router-link>
+          <router-link :to="`/post/${row.item.id}`">{{
+            row.item.title
+          }}</router-link>
         </template>
         <template #cell(author)="datarow">
-          {{ datarow.item.author_prenom }} {{ datarow.item.author_name }} 
+          {{ datarow.item.author_prenom }} {{ datarow.item.author_name }}
         </template>
       </b-table>
       <b-pagination
-      v-model="currentPage"
-      :total-rows="rows"
-      :per-page="perPage"
-      aria-controls="my-table"
-    ></b-pagination>
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="my-table"
+      ></b-pagination>
     </div>
-      
+
     <div v-else>Aucun post trouvé !</div>
     <div class="form-post">
       <b-form @submit.prevent="submit">
@@ -64,12 +74,15 @@
             drop-placeholder="Déposer le fichier ici ..."
             accept="image/*"
             @change="uploadFile($event)"
-            
           ></b-form-file>
         </b-form-group>
         <b-row>
           <b-col cols="2"></b-col>
-          <b-col><b-button type="submit" variant="primary" pill>Poster !</b-button></b-col>
+          <b-col
+            ><b-button type="submit" variant="primary" pill
+              >Poster !</b-button
+            ></b-col
+          >
         </b-row>
       </b-form>
     </div>
@@ -78,7 +91,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import moment from 'moment';
+import moment from "moment";
 
 export default {
   name: "Posts",
@@ -91,32 +104,32 @@ export default {
       },
       images: null,
       fields: [
-          {
-            key: 'title',
-            label: 'Sujet',
-            sortable: true
+        {
+          key: "title",
+          label: "Sujet",
+          sortable: true,
+        },
+        {
+          key: "author",
+          label: "Auteur",
+          sortable: true,
+        },
+        {
+          key: "nb_responses",
+          label: "Nb",
+          sortable: true,
+        },
+        {
+          key: "created_at",
+          label: "Date de création",
+          sortable: true,
+          formatter: (value) => {
+            return moment(value).format("DD/MM/YYYY");
           },
-          {
-            key: 'author',
-            label: 'Auteur',
-            sortable: true
-          },
-          {
-            key: 'nb_responses',
-            label: 'Nb',
-            sortable: true
-          },
-          {
-            key: 'created_at',
-            label: 'Date de création',
-            sortable: true,
-            formatter: (value) => {
-              return moment(value).format('DD/MM/YYYY')
-            }
-          }
-        ],
-        perPage: 10,
-        currentPage: 1,
+        },
+      ],
+      perPage: 10,
+      currentPage: 1,
     };
   },
   created: function () {
@@ -131,22 +144,18 @@ export default {
       Responses: "StateResponses",
     }),
     rows() {
-      return this.Posts.length
-    }
+      return this.Posts.length;
+    },
   },
   methods: {
     ...mapActions(["CreatePost", "CreateResponse", "GetPosts", "GetResponses"]),
     async submit() {
-      // try {
-        const formData = new FormData();
-        formData.append('image', this.images);
-        formData.append('postTitle', this.form.title);
-        formData.append('postMessage', this.form.message);
+      const formData = new FormData();
+      formData.append("image", this.images);
+      formData.append("postTitle", this.form.title);
+      formData.append("postMessage", this.form.message);
 
-        await this.CreatePost(formData);
-      // } catch (error) {
-      //   throw error;
-      // }
+      await this.CreatePost(formData);
     },
     async submitResponse(post) {
       try {
@@ -156,8 +165,8 @@ export default {
       }
     },
     uploadFile(event) {
-        this.images = event.target.files[0];
-      },
+      this.images = event.target.files[0];
+    },
   },
 };
 </script>
@@ -198,8 +207,7 @@ ul {
   height: 100px;
 }
 .responses {
-    border: 3px solid rgb(252, 215, 215);
-
+  border: 3px solid rgb(252, 215, 215);
 }
 .posts {
   margin-top: 20px;
